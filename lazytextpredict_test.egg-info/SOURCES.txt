@@ -1,0 +1,8 @@
+README.md
+setup.py
+lazytextpredict/__init__.py
+lazytextpredict/example_code.py
+lazytextpredict_test.egg-info/PKG-INFO
+lazytextpredict_test.egg-info/SOURCES.txt
+lazytextpredict_test.egg-info/dependency_links.txt
+lazytextpredict_test.egg-info/top_level.txt
