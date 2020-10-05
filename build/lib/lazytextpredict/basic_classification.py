@@ -37,7 +37,7 @@ def main():
 	'roberta-base'
 	]
 
-	train_dataset, test_dataset = load_dataset('imdb', split=['train[:5%]', 'test[:5%]'])
+	train_dataset_raw, test_dataset_raw = load_dataset('imdb', split=['train[:5%]', 'test[:5%]'])
 
 
 	for model_name in model_list:
@@ -64,8 +64,8 @@ def main():
 			return tokenizer(batch['text'], padding=True, truncation=True)
 
 		
-		train_dataset = train_dataset.map(tokenize, batched=True, batch_size=len(train_dataset))
-		test_dataset = test_dataset.map(tokenize, batched=True, batch_size=len(train_dataset))
+		train_dataset = train_dataset_raw.map(tokenize, batched=True, batch_size=len(train_dataset_raw))
+		test_dataset = test_dataset_raw.map(tokenize, batched=True, batch_size=len(train_dataset_raw))
 		train_dataset.set_format('torch', columns=['input_ids', 'attention_mask', 'label'])
 		test_dataset.set_format('torch', columns=['input_ids', 'attention_mask', 'label'])
 
