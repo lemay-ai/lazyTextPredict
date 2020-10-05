@@ -1,6 +1,7 @@
 README.md
 setup.py
 lazytextpredict/__init__.py
+lazytextpredict/basic_classification.py
 lazytextpredict/example_code.py
 lazytextpredict_test.egg-info/PKG-INFO
 lazytextpredict_test.egg-info/SOURCES.txt
