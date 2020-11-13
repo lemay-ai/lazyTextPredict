@@ -8,7 +8,7 @@ What we do is load your text for classification into several of the most useful 
 
 The models we use at the moment come from [this](https://github.com/huggingface/transformers) library.
 
-The results show you metrics like Accuracy, f1 score, precision, recall etc. in a simple table-like output.
+The results show you metrics like: accuracy, f1 score, precision, recall etc. in a simple table-like output.
 You can then go ahead and choose whiever model works best for you.
 
 This tool is built on top of [PyTorch](https://pytorch.org/) framework and [transformers](https://github.com/huggingface/transformers) library.
