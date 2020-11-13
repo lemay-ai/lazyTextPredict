@@ -1,6 +1,6 @@
 # lazy Text Predict
 
-Do you want to automatically tag your blog posts? Identify scientific terms in a document? Try to identify the author of a new novel? These are all text classification problems, but may require different levels of complexity in their execution. You don't want to use a deep neural network when a decision tree could suffice, and you also don't want to get stuck trying to get a
+Do you want to automatically tag your blog posts? Identify scientific terms in a document? Try to identify the author of a new novel? These are all text classification problems, but may require different levels of complexity in their execution. You don't want to use a deep neural network when a decision tree could suffice, or vice-versa!
 
 This tool lets you quickly choose between different natural language processing tools for your classification problem.
 
@@ -18,21 +18,26 @@ This tool is built on top of [PyTorch](https://pytorch.org/) framework and [tran
 Unfortunately, this tool requires a fair bit of computing power. If you do not have a GPU that the tool can use, you will struggle to run it.
 
 A good test is to try to install tensorflow-gpu, if you can, there is a chance you could run this tool!
+```
+pip install tensorflow-gpu
+```
 
-A practical alternative is to run this all in google colab pro or similar platforms that give you access to the resources you need.
+A practical alternative is to run this all in google colab pro or similar platforms that give you access to the resources you need (although these might not be free!).
 
 ## Installation
 
-Install the package from the PyPi test server:
+Install the package from the PyPi test server in command line:
 ```
 python3 -m pip install --index-url https://test.pypi.org/simple/ lazytextpredict-test
 ```
 
-## Usage (temporary)
+## Usage
 
-Currently the data and models are hard-coded.
+Currently the data and models are hard-coded, i.e. you can't upload your own data yet or choose your models, but watch this space!
+
 ```
 from lazytextpredict import basic_classification
 
 basic_classification.main()
 ```
+This will train and test each of the models show you their performance (loss rate, f1 score, training time, computing resources required etc.)
