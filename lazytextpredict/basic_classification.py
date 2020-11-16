@@ -2,7 +2,9 @@ from transformers import BertForSequenceClassification, BertTokenizerFast, Train
 from nlp import load_dataset
 import torch
 import numpy as np
-from sklearn.metrics import accuracy_score, precision_recall_fscore_support
+import pandas as pd
+import gc
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support, classification_report
 import transformers
 
 def compute_metrics(pred):
@@ -10,12 +12,14 @@ def compute_metrics(pred):
 	preds = pred.predictions.argmax(-1)
 	precision, recall, f1, _ = precision_recall_fscore_support(labels, preds, average='binary')
 	acc = accuracy_score(labels, preds)
+	full_report = classification_report(labels, preds, output_dict=True)
 	return {
 		'accuracy': acc,
 		'f1': f1,
 		'precision': precision,
-		'recall': recall
-	}
+		'recall': recall,
+		'full_report': full_report
+		}
 
 
 class LTP:
@@ -25,9 +29,9 @@ class LTP:
 			'albert-base-v2',
 			'roberta-base'
 			]
-		self.train_dataset_raw, self.test_dataset_raw = load_dataset('imdb', split=['train[:5%]', 'test[:5%]'])
+		self.train_dataset_raw, self.test_dataset_raw = load_dataset('imdb', split=['train[:1%]', 'test[:1%]'])
 
-		#self.training_args = None
+		self.all_metrics = {}
 
 	def compute_metrics(self, pred):
 		labels = pred.label_ids
@@ -40,6 +44,25 @@ class LTP:
 			'precision': precision,
 			'recall': recall
 		}
+
+
+	def get_metrics(self):
+		return self.all_metrics
+
+	def get_metrics_df(self):
+		dic = self.get_metrics()
+		df = pd.DataFrame.from_dict(dic)
+		df = df.rename_axis("model_name", axis="columns").T
+		df.reset_index(inplace=True)
+		df.rename_axis()
+		return df
+
+	def print_metrics_table(self):
+		dic = self.get_metrics()
+		print("{:>25} {:>15} {:>15} {:>15} {:>15} {:>15}".format('Model', 'loss', 'accuracy', 'f1', 'precision', 'recall'))
+		for k, v in dic.items():
+			print("{:>25} {:15.5} {:15.5} {:15.5} {:15.5} {:15.5}".format(k, v['eval_loss'], v['eval_accuracy'], v['eval_f1'], v['eval_precision'], v['eval_recall']))
+
 
 	def run(self):
 
@@ -95,7 +118,9 @@ class LTP:
 
 			trainer.train()
 
-			print(trainer.evaluate())
+			curr_metrics = trainer.evaluate()
+			self.all_metrics[model_name] = curr_metrics
+			print(curr_metrics)
 
 			trainer.save_model(model_name+"_model")
 
