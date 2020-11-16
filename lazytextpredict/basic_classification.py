@@ -23,6 +23,7 @@ class LTP:
 		preds = pred.predictions.argmax(-1)
 		precision, recall, f1, _ = precision_recall_fscore_support(labels, preds, average='binary')
 		full_report = classification_report(labels, preds, output_dict=True)
+		acc = accuracy_score(labels, preds)
 		return {
 			'accuracy': acc,
 			'f1': f1,
