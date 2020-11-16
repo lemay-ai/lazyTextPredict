@@ -7,21 +7,6 @@ import gc
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support, classification_report
 import transformers
 
-def compute_metrics(pred):
-	labels = pred.label_ids
-	preds = pred.predictions.argmax(-1)
-	precision, recall, f1, _ = precision_recall_fscore_support(labels, preds, average='binary')
-	acc = accuracy_score(labels, preds)
-	full_report = classification_report(labels, preds, output_dict=True)
-	return {
-		'accuracy': acc,
-		'f1': f1,
-		'precision': precision,
-		'recall': recall,
-		'full_report': full_report
-		}
-
-
 class LTP:
 	def __init__ (self):
 		self.model_list = [
@@ -37,13 +22,14 @@ class LTP:
 		labels = pred.label_ids
 		preds = pred.predictions.argmax(-1)
 		precision, recall, f1, _ = precision_recall_fscore_support(labels, preds, average='binary')
-		acc = accuracy_score(labels, preds)
+		full_report = classification_report(labels, preds, output_dict=True)
 		return {
 			'accuracy': acc,
 			'f1': f1,
 			'precision': precision,
-			'recall': recall
-		}
+			'recall': recall,
+			'full_report': full_report
+			}
 
 
 	def get_metrics(self):
