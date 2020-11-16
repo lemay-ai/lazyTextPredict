@@ -99,4 +99,9 @@ class LTP:
 
 			trainer.save_model(model_name+"_model")
 
+			# adding this fully solves the out of memory (OOM) error; https://github.com/huggingface/transformers/issues/1742
+			del model, tokenizer, trainer
+
+			# these 2 lines may not be needed
+			gc.collect()
 			torch.cuda.empty_cache()
