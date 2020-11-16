@@ -1,4 +1,4 @@
-# lazy Text Predict
+# Lazy Text Predict
 
 Do you want to automatically tag your blog posts? Identify scientific terms in a document? Try to identify the author of a new novel? These are all text classification problems, but may require different levels of complexity in their execution. You don't want to use a deep neural network when a decision tree could suffice, or vice-versa!
 
