@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="lazytextpredict-test", # Replace with your own username
-    version="0.0.3",
+    version="0.0.4",
     author="Jitesh Pabla",
     author_email="jiteshpabla97@gmail.com",
     description="A small example package",
