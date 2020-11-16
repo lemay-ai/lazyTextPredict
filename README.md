@@ -1,7 +1,11 @@
 # Lazy Text Predict
 
 Do you want to automatically tag your blog posts? Identify scientific terms in a document? Try to identify the author of a new novel? These are all text classification problems, but may require different levels of complexity in their execution. You don't want to use a deep neural network when a decision tree could suffice, or vice-versa!
+
+How do you choose the right option out of many hard-to-distinguish choices?
+
 ![How to choose out of seemingly identical choices?](https://cdn.pixabay.com/photo/2016/08/15/08/40/apple-1594742_960_720.jpg)
+
 This tool lets you quickly choose between different natural language processing tools for your classification problem.
 
 What we do is load your text for classification into several of the most useful tools we have identified, train the tools on a small portion of the data, and then try to show you which would be best for your problem.
