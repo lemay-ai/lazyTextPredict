@@ -7,7 +7,7 @@ import torch
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.linear_model import SGDClassifier
-from sklearn.metrics import accuracy_score, precision_recall_fscore_support, classification_report
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support, classification_report, hamming_loss
 from sklearn.model_selection import GridSearchCV
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
@@ -148,11 +148,13 @@ class LTP:
 				precision, recall, f1, _ = precision_recall_fscore_support(test_dataset['label'], prediction, average='binary')
 				full_report=classification_report(test_dataset['label'], prediction)
 				acc = accuracy_score(test_dataset['label'], prediction)
+				loss=hamming_loss(test_dataset['label'], prediction)
 				curr_metrics={
-            			'accuracy': acc,
-            			'f1': f1,
-            			'precision': precision,
-            			'recall': recall,
+				'eval_loss': loss,
+            			'eval_accuracy': acc,
+            			'eval_f1': f1,
+            			'eval_precision': precision,
+            			'eval_recall': recall,
             			'full_report': full_report
         }
 				print('best parameters are:')
