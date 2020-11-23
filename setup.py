@@ -16,7 +16,7 @@ setuptools.setup(
     install_requires =[
     "transformers==3.5.1",
     "nlp==0.4.0",
-    "torch"==1.7.0+cu101",
+    "torch==1.7.0+cu101",
     "numpy==1.18.5",
     "scikit_learn==0.23.2"
     ],
