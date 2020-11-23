@@ -32,7 +32,7 @@ A practical alternative is to run this all in google colab pro or similar platfo
 
 Install the package from the PyPi test server in command line:
 ```
-python3 -m pip install --index-url https://test.pypi.org/simple/ lazytextpredict-test
+python3 -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple  lazytextpredict-installs
 ```
 
 ## Usage
@@ -42,6 +42,10 @@ Currently the data and models are hard-coded, i.e. you can't upload your own dat
 ```
 from lazytextpredict import basic_classification
 
-basic_classification.main()
+trial=basic_classification.LTP()
+
+trial.run()
+
+trial.print_metrics_table()
 ```
-This will train and test each of the models show you their performance (loss rate, f1 score, training time, computing resources required etc.)
+This will train and test each of the models show you their performance (loss rate, f1 score, accuracy etc.)
