@@ -8,10 +8,11 @@ import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.linear_model import SGDClassifier
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support, classification_report, hamming_loss
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import train_test_split,  GridSearchCV
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 from random import sample, choices
+from joblib import dump, load
 
 class LTP:
 	def __init__ (self):
@@ -97,7 +98,7 @@ class LTP:
 			elif model_name == "linear_SVM":
 				tokenizer = None
 				model = 'linear_SVM'
-				parameters=parameters = {
+				parameters={
 				  'vect__ngram_range': [(1, 1), (1, 2)],
 			  	'tfidf__use_idf': (True, False),
 				  'clf__alpha': (5e-2, 1e-2,5e-3, 1e-3,5e-3),
@@ -107,7 +108,7 @@ class LTP:
 			elif model_name == "multinomial_naive_bayesian":
 				tokenizer = None
 				model = 'multinomial_naive_bayesian'
-				parameters=parameters = {
+				parameters= {
 				  'vect__ngram_range': [(1, 1), (1, 2)],
 				  'tfidf__use_idf': (True, False),
 				  'clf__alpha': (1,1e-1,1e-2, 1e-3,1e-4),
@@ -145,9 +146,10 @@ class LTP:
 				gs_clf = GridSearchCV(pipeline, parameters, cv=5, n_jobs=-1)
 				gs_ind=int(len(train_dataset['label'])/10)	#use a tenth of the training dataset to do gridsearch
 				gs_clf = gs_clf.fit(train_dataset['text'][:gs_ind], train_dataset['label'][:gs_ind])
-				pipeline.fit(train_dataset['text'], train_dataset['label'])
 				best_params=gs_clf.best_params_
 				pipeline.set_params(**best_params)
+				pipeline.fit(train_dataset['text'], train_dataset['label'])
+				
 				prediction=pipeline.predict(test_dataset['text'])
 				precision, recall, f1, _ = precision_recall_fscore_support(test_dataset['label'], prediction, average='binary')
 				full_report=classification_report(test_dataset['label'], prediction)
@@ -159,8 +161,9 @@ class LTP:
             			'eval_f1': f1,
             			'eval_precision': precision,
             			'eval_recall': recall,
-            			'full_report': full_report
+            			'eval_full_report': full_report
         }
+				dump(pipeline, model_name + "_model.joblib")
 				print('best parameters are:')
 				print(best_params)
 
@@ -186,3 +189,25 @@ class LTP:
 			# these 2 lines may not be needed
 			gc.collect()
 			torch.cuda.empty_cache()
+	def predict(self,text):
+		for model_name in self.model_list:
+			if model_name == "linear_SVM" or model_name == "multinomial_naive_bayesian":
+				clf = load('/content/'+model_name+'_model.joblib')
+				y=clf.predict([text])
+				print(y)
+			else:
+				if model_name == "bert-base-uncased":
+					model = BertForSequenceClassification.from_pretrained('/content/bert-base-uncased_model')
+					#tokenizer = BertTokenizerFast.from_pretrained('bert-base-uncased_model')
+				elif model_name == "albert-base-v2":
+					#tokenizer = transformers.AlbertTokenizer.from_pretrained('albert-base-v2')
+					model = transformers.AlbertForSequenceClassification.from_pretrained('/content/albert-base-v2_model', return_dict=True)
+				elif model_name == "roberta-base":
+					#tokenizer = transformers.RobertaTokenizer.from_pretrained('roberta-base')
+					model = transformers.RobertaForSequenceClassification.from_pretrained('/content/roberta-base_model', return_dict=True)
+				trainer=Trainer(model=model)
+				custom_text=Dataset.from_pandas(pd.DataFrame(data={'input_ids': [text]}))
+				try:
+					trainer.predict(test_dataset=custom_text)
+				except:
+					print('I have not got this to work yet, it was probably a good review')
