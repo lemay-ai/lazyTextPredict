@@ -24,10 +24,14 @@ class LTP:
 
 			]
 		self.train_dataset_raw, self.test_dataset_raw = load_dataset('imdb', split=['train', 'test'])
-		self.train_dataset_raw_random=choices(self.train_dataset_raw,k=int(len(self.train_dataset_raw)/100))
-		self.test_dataset_raw_random=choices(self.test_dataset_raw,k=int(len(self.test_dataset_raw)/100))
-		self.train_dataset_raw = Dataset.from_pandas(pd.DataFrame(self.train_dataset_raw_random))
-		self.test_dataset_raw = Dataset.from_pandas(pd.DataFrame(self.test_dataset_raw_random))
+		X=self.train_dataset_raw['text']+self.test_dataset_raw['text']
+		Y=self.train_dataset_raw['label']+self.test_dataset_raw['label']
+		X_train, X_test, Y_train, Y_test = train_test_split(X, Y,
+                                                        stratify=Y, 
+                                                        test_size=0.005,
+                                                        train_size=0.005)
+		self.train_dataset_raw = Dataset.from_pandas(pd.DataFrame({'text':X_train, 'label': Y_train}))
+		self.test_dataset_raw = Dataset.from_pandas(pd.DataFrame({'text':X_test, 'label': Y_test}))
 		self.all_metrics = {}
 
 	def compute_metrics(self, pred):
