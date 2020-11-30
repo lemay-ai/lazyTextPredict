@@ -15,7 +15,7 @@ from random import sample, choices
 from joblib import dump, load
 
 class LTP:
-	def __init__ (self):
+	def __init__ (self, Xdata=None,Ydata=None):
 		self.model_list = [
 			'linear_SVM',
 			'multinomial_naive_bayesian',
@@ -24,16 +24,23 @@ class LTP:
 			'roberta-base'
 
 			]
-		self.train_dataset_raw, self.test_dataset_raw = load_dataset('imdb', split=['train', 'test'])
-		X=self.train_dataset_raw['text']+self.test_dataset_raw['text']
-		Y=self.train_dataset_raw['label']+self.test_dataset_raw['label']
-		X_train, X_test, Y_train, Y_test = train_test_split(X, Y,
+		if Xdata==Ydata==None or (Xdata==None and Ydata!=None) or (Xdata!=None and Ydata==None):
+      print('Either you have not put in your own data, or you have only put in X or Y data, loading default dataset...')
+      self.train_dataset_raw, self.test_dataset_raw = load_dataset('imdb', split=['train', 'test'])
+      X=self.train_dataset_raw['text']+self.test_dataset_raw['text']
+      Y=self.train_dataset_raw['label']+self.test_dataset_raw['label']
+    else:
+      X=Xdata
+      Y=Ydata
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y,
                                                         stratify=Y, 
                                                         test_size=0.005,
                                                         train_size=0.005)
-		self.train_dataset_raw = Dataset.from_pandas(pd.DataFrame({'text':X_train, 'label': Y_train}))
-		self.test_dataset_raw = Dataset.from_pandas(pd.DataFrame({'text':X_test, 'label': Y_test}))
-		self.all_metrics = {}
+    self.train_dataset_raw = Dataset.from_pandas(pd.DataFrame({'text':X_train, 'label': Y_train}))
+    self.test_dataset_raw = Dataset.from_pandas(pd.DataFrame({'text':X_test, 'label': Y_test}))
+    self.all_metrics = {}
+
+
 
 	def compute_metrics(self, pred):
 		labels = pred.label_ids
