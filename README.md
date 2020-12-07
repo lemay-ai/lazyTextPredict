@@ -42,6 +42,10 @@ Currently the data and models are hard-coded, i.e. you can't upload your own dat
 ```
 from lazytextpredict import basic_classification
 
-basic_classification.main()
+trial=basic_classification.LTP()
+
+trial.run(Xdata, Ydata) #Xdata is a list of text entries, and Ydata is a list of corresponding labels
+
+trial.print_metrics_table()
 ```
 This will train and test each of the models show you their performance (loss rate, f1 score, training time, computing resources required etc.)
