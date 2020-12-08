@@ -37,7 +37,9 @@ python3 -m pip install --index-url https://test.pypi.org/simple/ --extra-index-u
 
 ## Usage
 
-Currently the models are hard-coded, i.e. you can't upload your own data yet, and you can only choose between neural network and count-vectorizer models, but watch this space!
+Currently the models are hard-coded, i.e. you can only choose between neural network and count-vectorizer models, but watch this space!
+
+You can currently only upload binary data, i.e. the models can be trained to detect differences between happy and sad text, positive or negative reviews, etc. Your data should be submitted as python lists to the fields Xdata and Ydata.
 
 ```
 from lazytextpredict import basic_classification
