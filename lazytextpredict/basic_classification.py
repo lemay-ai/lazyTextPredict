@@ -37,25 +37,25 @@ def int_labels_to_list(Y,keys):
 
 class LTP:
 	def __init__ (self, Xdata=None,Ydata=None, models='all'):
-    if models=='all':
-      self.model_list = [
-        'bert-base-uncased',
+		if models=='all':
+			self.model_list = [
+				'bert-base-uncased',
         'albert-base-v2',
         'roberta-base',
         'linear_SVM',
         'multinomial_naive_bayesian',]
-    elif models=='count-vectorizer':
-      self.model_list = [
+		elif models=='count-vectorizer':
+			self.model_list = [
         'linear_SVM',
         'multinomial_naive_bayesian',]
-    elif models=='cnn':
-      self.model_list = [
+		elif models=='cnn':
+			self.model_list = [
         'bert-base-uncased',
         'albert-base-v2',
         'roberta-base',]
-    else:
-      print('Models not recognized, the available options are currently "all", "count-vectorizer", and "cnn")
-      return
+		else:
+			print('Models not recognized, the available options are currently "all", "count-vectorizer", and "cnn"')
+			return
 
 		if Xdata==Ydata==None or (Xdata==None and Ydata!=None) or (Xdata!=None and Ydata==None):
 			print('Either you have not put in your own data, or you have only put in X or Y data, loading default dataset...')
@@ -172,9 +172,6 @@ class LTP:
 			def tokenize(batch):
 				return tokenizer(batch['text'], padding=True, truncation=True)
 
-			def 
-
-
 			if tokenizer is not None:
 
 				train_dataset = self.train_dataset_raw.map(tokenize, batched=True, batch_size=len(self.train_dataset_raw))
@@ -240,16 +237,6 @@ class LTP:
 			torch.cuda.empty_cache()
 	def predict(self,text):
 		for model_name in self.model_list:
-			if model_name == "linear_SVM" or model_name == "multinomial_naive_bayesian":
-				clf = load('/content/'+model_name+'_model.joblib')
-				y=clf.predict([text])
-				print(y)
-			else:
-				if model_name == "bert-base-uncased":
-					model = BertForSequenceClassification.from_pretrained('/content/bert-base-uncased_model')
-					#tokenizer = BertTokenizerFast.from_pretrained('bert-base-uncased_model')
-…				except:
-					print('I have not got this to work yet, it was probably a good review')elf.model_list:
 			if model_name == "linear_SVM" or model_name == "multinomial_naive_bayesian":
 				clf = load('/content/'+model_name+'_model.joblib')
 				y=clf.predict([text])
