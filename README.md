@@ -32,19 +32,19 @@ A practical alternative is to run this all in google colab pro or similar platfo
 
 Install the package from the PyPi test server in command line:
 ```
-python3 -m pip install --index-url https://test.pypi.org/simple/ lazytextpredict-test
+python3 -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple  lazytextpredict-installs
 ```
 
 ## Usage
 
-Currently the data and models are hard-coded, i.e. you can't upload your own data yet or choose your models, but watch this space!
+Currently the models are hard-coded, i.e. you can't upload your own data yet, and you can only choose between neural network and count-vectorizer models, but watch this space!
 
 ```
 from lazytextpredict import basic_classification
 
 trial=basic_classification.LTP()
 
-trial.run(Xdata, Ydata) #Xdata is a list of text entries, and Ydata is a list of corresponding labels
+trial.run(Xdata, Ydata, models='all') #Xdata is a list of text entries, and Ydata is a list of corresponding labels, and you can choose between 'cnn'-based models, 'count-vectorizer', and 'all' models.
 
 trial.print_metrics_table()
 ```
