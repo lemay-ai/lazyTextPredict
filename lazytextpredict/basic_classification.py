@@ -36,15 +36,27 @@ def int_labels_to_list(Y,keys):
 
 
 class LTP:
-	def __init__ (self, Xdata=None,Ydata=None):
-		self.model_list = [
-			'bert-base-uncased',
-			'albert-base-v2',
-			'roberta-base',
-			'linear_SVM',
-			'multinomial_naive_bayesian',
+	def __init__ (self, Xdata=None,Ydata=None, models='all'):
+    if models=='all':
+      self.model_list = [
+        'bert-base-uncased',
+        'albert-base-v2',
+        'roberta-base',
+        'linear_SVM',
+        'multinomial_naive_bayesian',]
+    elif models=='count-vectorizer':
+      self.model_list = [
+        'linear_SVM',
+        'multinomial_naive_bayesian',]
+    elif models=='cnn':
+      self.model_list = [
+        'bert-base-uncased',
+        'albert-base-v2',
+        'roberta-base',]
+    else:
+      print('Models not recognized, the available options are currently "all", "count-vectorizer", and "cnn")
+      return
 
-			]
 		if Xdata==Ydata==None or (Xdata==None and Ydata!=None) or (Xdata!=None and Ydata==None):
 			print('Either you have not put in your own data, or you have only put in X or Y data, loading default dataset...')
 			self.train_dataset_raw, self.test_dataset_raw = load_dataset('imdb', split=['train', 'test'])
