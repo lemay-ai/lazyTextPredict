@@ -44,7 +44,7 @@ from lazytextpredict import basic_classification
 
 trial=basic_classification.LTP()
 
-trial.run(Xdata, Ydata, models='all') #Xdata is a list of text entries, and Ydata is a list of corresponding labels, and you can choose between 'cnn'-based models, 'count-vectorizer', and 'all' models.
+trial.run(Xdata, Ydata, models='all') #Xdata is a list of text entries, and Ydata is a list of corresponding labels, and you can choose between 'cnn'-based, 'count-vectorizer'-based, and 'all' models.
 
 trial.print_metrics_table()
 ```
