@@ -18,7 +18,8 @@ setuptools.setup(
     "nlp==0.4.0",
     "torch==1.7.0+cu101",
     "numpy==1.18.5",
-    "scikit_learn==0.23.2"
+    "scikit_learn==0.23.2",
+    "sentencepiece",
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
