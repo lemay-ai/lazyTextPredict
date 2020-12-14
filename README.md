@@ -16,7 +16,13 @@ trial.run(Xdata, Ydata, models='all')
 # You can choose between 'cnn'-based, 'count-vectorizer'-based, and 'all' models.
 
 trial.print_metrics_table()
-# This will return the performance of the models that have been trained.
+# This will return the performance of the models that have been trained:
+                    Model            loss        accuracy              f1       precision          recall
+        bert-base-uncased         0.80771         0.69004         0.68058          0.6783         0.69004
+           albert-base-v2          0.8885         0.62252          0.6372           0.714         0.62252
+             roberta-base         0.99342           0.533         0.56416         0.68716           0.533
+               linear_SVM         0.36482         0.63518         0.30077         0.47439         0.30927
+multinomial_naive_bayesian         0.31697         0.68303         0.35983           0.443         0.37341
 
 
 trial.predict(text) 
