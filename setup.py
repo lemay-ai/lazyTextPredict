@@ -4,10 +4,10 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="lazytextpredict-test", # Replace with your own username
-    version="0.0.7",
-    author="Jitesh Pabla",
-    author_email="jiteshpabla97@gmail.com",
+    name="lazytextpredict-installs", # Replace with your own username
+    version="0.0.16",
+    author="Edward Booker",
+    author_email="epb378@gmail.com",
     description="A small example package",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -27,4 +27,3 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
-)
