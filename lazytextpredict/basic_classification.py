@@ -61,12 +61,15 @@ class LTP:
 			print('Either you have not put in your own data, or you have only put in X or Y data, loading default dataset...')
 			self.train_dataset_raw, self.test_dataset_raw = load_dataset('imdb', split=['train', 'test'])
 			X=self.train_dataset_raw['text']+self.test_dataset_raw['text']
-			Y=self.train_dataset_raw['label']+self.test_dataset_raw['label']
+			Y=self.train_dataset_raw['labels']+self.test_dataset_raw['labels']
 		else:
 			X=Xdata
 			Y=Ydata
 			if all(isinstance(n, int) for n in Y):
-				pass
+				keys=set(Y)
+    #add method to make min label 0
+				if min(Y)>1:
+				  Y=[y-min(Y) for y in Y]
 			else:
 				Y,keys=string_labels_to_int(Y)
 				
@@ -74,11 +77,15 @@ class LTP:
                                                         stratify=Y, 
                                                         test_size=0.05,
                                                         train_size=0.05)
-		#self.num_labels=len(keys)
+		self.num_labels=len(keys)
 		#self.train_dataset_raw_CNN = TensorDataset(X_train, int_labels_to_list(Y_train,keys))
 		#self.test_dataset_raw_CNN = TensorDataset(X_test, int_labels_to_list(Y_test,keys))
-		self.train_dataset_raw = Dataset.from_pandas(pd.DataFrame({'text':X_train, 'label': Y_train}))
-		self.test_dataset_raw = Dataset.from_pandas(pd.DataFrame({'text':X_test, 'label': Y_test}))	
+		print('X_train length: ' + str(len(X_train)))
+		print('X_test length: ' + str(len(X_test)))
+		print('Y_train length: ' + str(len(Y_train)))
+		print('Y_test length: ' + str(len(Y_test)))   
+		self.train_dataset_raw = Dataset.from_pandas(pd.DataFrame({'text':X_train, 'labels': Y_train}))
+		self.test_dataset_raw = Dataset.from_pandas(pd.DataFrame({'text':X_test, 'labels': Y_test}))	
 		self.all_metrics = {}
 
 
@@ -86,7 +93,7 @@ class LTP:
 	def compute_metrics(self, pred):
 		labels = pred.label_ids
 		preds = pred.predictions.argmax(-1)
-		precision, recall, f1, _ = precision_recall_fscore_support(labels, preds, average='binary')
+		precision, recall, f1, _ = precision_recall_fscore_support(labels, preds, average='weighted')
 		full_report = classification_report(labels, preds, output_dict=True)
 		acc = accuracy_score(labels, preds)
 		return {
@@ -122,7 +129,7 @@ class LTP:
 
 			training_args = TrainingArguments(
 			output_dir='./results/'+model_name,
-			num_train_epochs=10,
+			num_train_epochs=1,
 			per_device_train_batch_size=16,
 			per_device_eval_batch_size=64,
 			warmup_steps=500,
@@ -133,16 +140,16 @@ class LTP:
 
 			model = None
 			tokenizer = None
-
+			print('Training on a dataset with ' +str(self.num_labels)+ ' labels')
 			if model_name == "bert-base-uncased":
-				model = BertForSequenceClassification.from_pretrained(model_name, num_labels=2)#self.num_labels)
+				model = BertForSequenceClassification.from_pretrained(model_name, num_labels=self.num_labels)
 				tokenizer = BertTokenizerFast.from_pretrained(model_name)
 			elif model_name == "albert-base-v2":
 				tokenizer = transformers.AlbertTokenizer.from_pretrained('albert-base-v2')
-				model = transformers.AlbertForSequenceClassification.from_pretrained('albert-base-v2', return_dict=True, num_labels=2)#self.num_labels)
+				model = transformers.AlbertForSequenceClassification.from_pretrained('albert-base-v2', return_dict=True, num_labels=self.num_labels)
 			elif model_name == "roberta-base":
 				tokenizer = transformers.RobertaTokenizer.from_pretrained('roberta-base')
-				model = transformers.RobertaForSequenceClassification.from_pretrained('roberta-base', return_dict=True, num_labels=2)#self.num_labels)
+				model = transformers.RobertaForSequenceClassification.from_pretrained('roberta-base', return_dict=True, num_labels=self.num_labels)
 			elif model_name == "linear_SVM":
 				tokenizer = None
 				model = 'linear_SVM'
@@ -170,14 +177,14 @@ class LTP:
 
 
 			def tokenize(batch):
-				return tokenizer(batch['text'], padding=True, truncation=True)
+				return tokenizer(batch['text'], padding='max_length', truncation=True)
 
 			if tokenizer is not None:
 
 				train_dataset = self.train_dataset_raw.map(tokenize, batched=True, batch_size=len(self.train_dataset_raw))
 				test_dataset = self.test_dataset_raw.map(tokenize, batched=True, batch_size=len(self.train_dataset_raw))
-				train_dataset.set_format('torch', columns=['input_ids', 'attention_mask', 'label'])
-				test_dataset.set_format('torch', columns=['input_ids', 'attention_mask', 'label'])
+				train_dataset.set_format('torch', columns=['input_ids', 'attention_mask', 'labels'])
+				test_dataset.set_format('torch', columns=['input_ids', 'attention_mask', 'labels'])
 			else:
 				train_dataset = self.train_dataset_raw
 				test_dataset = self.test_dataset_raw
@@ -190,23 +197,23 @@ class LTP:
                      ('clf', classifier),
                      ])
 				gs_clf = GridSearchCV(pipeline, parameters, cv=5, n_jobs=-1)
-				gs_ind=int(len(train_dataset['label'])/10)	#use a tenth of the training dataset to do gridsearch
-				gs_clf = gs_clf.fit(train_dataset['text'][:gs_ind], train_dataset['label'][:gs_ind])
+				gs_ind=int(len(train_dataset['labels'])/10)	#use a tenth of the training dataset to do gridsearch
+				gs_clf = gs_clf.fit(train_dataset['text'][:gs_ind], train_dataset['labels'][:gs_ind])
 				best_params=gs_clf.best_params_
 				pipeline.set_params(**best_params)
-				pipeline.fit(train_dataset['text'], train_dataset['label'])
+				pipeline.fit(train_dataset['text'], train_dataset['labels'])
 				
 				prediction=pipeline.predict(test_dataset['text'])
-				precision, recall, f1, _ = precision_recall_fscore_support(test_dataset['label'], prediction, average=None)
-				full_report=classification_report(test_dataset['label'], prediction)
-				acc = accuracy_score(test_dataset['label'], prediction)
-				loss=hamming_loss(test_dataset['label'], prediction)
+				precision, recall, f1, _ = precision_recall_fscore_support(test_dataset['labels'], prediction, average=None)
+				full_report=classification_report(test_dataset['labels'], prediction)
+				acc = accuracy_score(test_dataset['labels'], prediction)
+				loss=hamming_loss(test_dataset['labels'], prediction)
 				curr_metrics={
 				'eval_loss': loss,
-            			'eval_accuracy': acc,
-            			'eval_f1': f1,
-            			'eval_precision': precision,
-            			'eval_recall': recall,
+            			'eval_accuracy': np.mean(acc),
+            			'eval_f1': np.mean(f1),
+            			'eval_precision': np.mean(precision),
+            			'eval_recall': np.mean(recall),
             			'eval_full_report': full_report
         }
 				dump(pipeline, model_name + "_model.joblib")
@@ -240,20 +247,23 @@ class LTP:
 			if model_name == "linear_SVM" or model_name == "multinomial_naive_bayesian":
 				clf = load('/content/'+model_name+'_model.joblib')
 				y=clf.predict([text])
-				print(y)
 			else:
 				if model_name == "bert-base-uncased":
-					model = BertForSequenceClassification.from_pretrained('/content/bert-base-uncased_model')
-					#tokenizer = BertTokenizerFast.from_pretrained('bert-base-uncased_model')
+					model=BertForSequenceClassification.from_pretrained('/content/bert-base-uncased_model')
+					tokenizer=BertTokenizerFast.from_pretrained('bert-base-uncased')
+					text_classification= trans.pipeline('sentiment-analysis', model=model, tokenizer=tokenizer)
+					y=int(text_classification(text)[0]['label'][-1])
 				elif model_name == "albert-base-v2":
-					#tokenizer = transformers.AlbertTokenizer.from_pretrained('albert-base-v2')
-					model = transformers.AlbertForSequenceClassification.from_pretrained('/content/albert-base-v2_model', return_dict=True)
+					model=transformers.AlbertForSequenceClassification.from_pretrained('/content/albert-base-v2_model')
+					tokenizer=transformers.AlbertTokenizer.from_pretrained('albert-base-v2')
+					text_classification= trans.pipeline('sentiment-analysis', model=model, tokenizer=tokenizer)
+					y=int(text_classification(text)[0]['label'][-1])
 				elif model_name == "roberta-base":
-					#tokenizer = transformers.RobertaTokenizer.from_pretrained('roberta-base')
-					model = transformers.RobertaForSequenceClassification.from_pretrained('/content/roberta-base_model', return_dict=True)
-				trainer=Trainer(model=model)
-				custom_text=Dataset.from_pandas(pd.DataFrame(data={'input_ids': [text]}))
-				try:
-					trainer.predict(test_dataset=custom_text)
-				except:
-					print('I have not got this to work yet, it was probably a good review')
+					model=transformers.RobertaForSequenceClassification.from_pretrained('/content/roberta-base_model')
+					tokenizer=transformers.RobertaTokenizer.from_pretrained('roberta-base')
+					text_classification= trans.pipeline('sentiment-analysis', model=model, tokenizer=tokenizer)
+					y=int(text_classification(text)[0]['label'][-1])
+			try:
+				print(model_name +' predicts that your text was ' +y)
+			except:
+				print('I have not got '+ model_name+' to work yet, it was probably a good text :P')
