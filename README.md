@@ -11,11 +11,15 @@ from lazytextpredict import basic_classification
 
 trial=basic_classification.LTP() 
 
-trial.run(Xdata, Ydata, models='all') #Xdata is a list of text entries, and Ydata is a list of corresponding labels, and you can choose between 'cnn'-based, 'count-vectorizer'-based, and 'all' models.
+trial.run(Xdata, Ydata, models='all') 
+# Xdata is a list of text entries, and Ydata is a list of corresponding labels.
+# You can choose between 'cnn'-based, 'count-vectorizer'-based, and 'all' models.
 
 trial.print_metrics_table()
 
-trial.predict(text) # here text is some custom, user specified string that your trained classifiers can classify. Will return the class's index based on how the order it appears in your input labels.
+trial.predict(text) 
+# here text is some custom, user specified string that your trained classifiers can classify. 
+# This will return the class's index based on how the order it appears in your input labels.
 ```
 This will train and test each of the models show you their performance (loss rate, f1 score, training time, computing resources required etc.)
 
