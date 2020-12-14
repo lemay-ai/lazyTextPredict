@@ -1,5 +1,33 @@
 # Lazy Text Predict
 
+## Usage
+
+Currently the models are hard-coded, i.e. you can only choose between neural network and count-vectorizer models, but watch this space!
+
+You can currently only upload binary data, i.e. the models can be trained to detect differences between happy and sad text, positive or negative reviews, etc. Your data should be submitted as python lists to the fields Xdata and Ydata.
+
+```
+from lazytextpredict import basic_classification
+
+trial=basic_classification.LTP() 
+
+trial.run(Xdata, Ydata, models='all') #Xdata is a list of text entries, and Ydata is a list of corresponding labels, and you can choose between 'cnn'-based, 'count-vectorizer'-based, and 'all' models.
+
+trial.print_metrics_table()
+
+trial.predict(text) # here text is some custom, user specified string that your trained classifiers can classify. Will return the class's index based on how the order it appears in your input labels.
+```
+This will train and test each of the models show you their performance (loss rate, f1 score, training time, computing resources required etc.)
+
+## Installation
+
+Install the package from the PyPi test server in command line:
+```
+python3 -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple  lazytextpredict-installs
+```
+
+## About
+
 Do you want to automatically tag your blog posts? Identify scientific terms in a document? Try to identify the author of a new novel? These are all text classification problems, but may require different levels of complexity in their execution. You don't want to use a deep neural network when a decision tree could suffice, or vice-versa!
 
 How do you choose the best option out of so many choices?
@@ -28,26 +56,4 @@ pip install tensorflow-gpu
 
 A practical alternative is to run this all in google colab pro or similar platforms that give you access to the resources you need (although these might not be free!).
 
-## Installation
 
-Install the package from the PyPi test server in command line:
-```
-python3 -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple  lazytextpredict-installs
-```
-
-## Usage
-
-Currently the models are hard-coded, i.e. you can only choose between neural network and count-vectorizer models, but watch this space!
-
-You can currently only upload binary data, i.e. the models can be trained to detect differences between happy and sad text, positive or negative reviews, etc. Your data should be submitted as python lists to the fields Xdata and Ydata.
-
-```
-from lazytextpredict import basic_classification
-
-trial=basic_classification.LTP()
-
-trial.run(Xdata, Ydata, models='all') #Xdata is a list of text entries, and Ydata is a list of corresponding labels, and you can choose between 'cnn'-based, 'count-vectorizer'-based, and 'all' models.
-
-trial.print_metrics_table()
-```
-This will train and test each of the models show you their performance (loss rate, f1 score, training time, computing resources required etc.)
