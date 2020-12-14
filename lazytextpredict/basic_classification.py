@@ -242,7 +242,12 @@ class LTP:
 			# these 2 lines may not be needed
 			gc.collect()
 			torch.cuda.empty_cache()
-	def predict(self,text):
+   
+   
+	def predict(self,text=None):
+		if text == None:
+			print('you did not enter any text to classify, sorry')
+			return
 		for model_name in self.model_list:
 			if model_name == "linear_SVM" or model_name == "multinomial_naive_bayesian":
 				clf = load('/content/'+model_name+'_model.joblib')
@@ -251,19 +256,17 @@ class LTP:
 				if model_name == "bert-base-uncased":
 					model=BertForSequenceClassification.from_pretrained('/content/bert-base-uncased_model')
 					tokenizer=BertTokenizerFast.from_pretrained('bert-base-uncased')
-					text_classification= trans.pipeline('sentiment-analysis', model=model, tokenizer=tokenizer)
-					y=int(text_classification(text)[0]['label'][-1])
+					text_classification= transformers.pipeline('sentiment-analysis', model=model, tokenizer=tokenizer)
+					y=text_classification(text)[0]
 				elif model_name == "albert-base-v2":
 					model=transformers.AlbertForSequenceClassification.from_pretrained('/content/albert-base-v2_model')
 					tokenizer=transformers.AlbertTokenizer.from_pretrained('albert-base-v2')
-					text_classification= trans.pipeline('sentiment-analysis', model=model, tokenizer=tokenizer)
-					y=int(text_classification(text)[0]['label'][-1])
+					text_classification= transformers.pipeline('sentiment-analysis', model=model, tokenizer=tokenizer)
+					y=text_classification(text)[0]
 				elif model_name == "roberta-base":
 					model=transformers.RobertaForSequenceClassification.from_pretrained('/content/roberta-base_model')
 					tokenizer=transformers.RobertaTokenizer.from_pretrained('roberta-base')
-					text_classification= trans.pipeline('sentiment-analysis', model=model, tokenizer=tokenizer)
-					y=int(text_classification(text)[0]['label'][-1])
-			try:
-				print(model_name +' predicts that your text was ' +y)
-			except:
-				print('I have not got '+ model_name+' to work yet, it was probably a good text :P')
+					text_classification= transformers.pipeline('sentiment-analysis', model=model, tokenizer=tokenizer)
+					y=text_classification(text)[0]
+			print(model_name)
+			print(y)
