@@ -16,9 +16,11 @@ trial.run(Xdata, Ydata, models='all')
 # You can choose between 'cnn'-based, 'count-vectorizer'-based, and 'all' models.
 
 trial.print_metrics_table()
+# This will return the performance of the models that have been trained.
+
 
 trial.predict(text) 
-# here text is some custom, user specified string that your trained classifiers can classify. 
+# Here text is some custom, user specified string that your trained classifiers can classify. 
 # This will return the class's index based on how the order it appears in your input labels.
 ```
 This will train and test each of the models show you their performance (loss rate, f1 score, training time, computing resources required etc.)
