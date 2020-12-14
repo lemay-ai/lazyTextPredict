@@ -67,11 +67,11 @@ class LTP:
 			Y=Ydata
 			if all(isinstance(n, int) for n in Y):
 				keys=set(Y)
+			else:
+				Y,keys=string_labels_to_int(Y)
     #add method to make min label 0
 				if min(Y)>1:
 				  Y=[y-min(Y) for y in Y]
-			else:
-				Y,keys=string_labels_to_int(Y)
 				
 		X_train, X_test, Y_train, Y_test = train_test_split(X, Y,
                                                         stratify=Y, 
