@@ -26,7 +26,7 @@ multinomial_naive_bayesian         0.31697         0.68303         0.35983      
 
 
 trial.predict(text) 
-# Here text is some custom, user specified string that your trained classifiers can classify. 
+# Here text is some custom, user-specified string that your trained classifiers can classify. 
 # This will return the class's index based on how the order it appears in your input labels.
 ```
 This will train and test each of the models show you their performance (loss rate, f1 score, training time, computing resources required etc.)
