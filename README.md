@@ -4,7 +4,7 @@
 
 Currently the models are hard-coded, i.e. you can only choose between neural network and count-vectorizer models, but watch this space!
 
-You can currently only upload binary data, i.e. the models can be trained to detect differences between happy and sad text, positive or negative reviews, etc. Your data should be submitted as python lists to the fields Xdata and Ydata.
+You can currently only upload data which has single categories (i.e. the models can be trained to detect differences between happy, jealous or sad text etc., but not both happy and excited) Your data should be submitted as python lists to the fields Xdata and Ydata.
 
 ```
 from lazytextpredict import basic_classification
