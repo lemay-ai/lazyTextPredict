@@ -70,7 +70,7 @@ class LTP:
 			else:
 				Y,keys=string_labels_to_int(Y)
     #add method to make min label 0
-				if min(Y)>1:
+				if min(Y)>=1:
 				  Y=[y-min(Y) for y in Y]
 				
 		X_train, X_test, Y_train, Y_test = train_test_split(X, Y,
