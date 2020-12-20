@@ -1,4 +1,3 @@
-
 import pandas as pd
 import gc
 import transformers
@@ -57,17 +56,17 @@ class LTP:
 		else:
 			print('Models not recognized, the available options are currently "all", "count-vectorizer", and "cnn"')
 			return
-    if csv!=None and xlsx!= None and Xdata!=None:
-      print("You have provided too much data, give just x and y data, or a csv or xlsx file!")
-      return
-    if csv!=None:
-      csv_data=pd.read_csv(csv)
-      Xdata=csv_data[x_col]
-      Ydata=csv_data[y_col]
-    if xlsx!=None:
-      xlsx_data=pd.read_excel(xlsx)
-      Xdata=xlsx_data[x_col]
-      Ydata=xlsx_data[y_col]
+		if csv!=None and xlsx!= None and Xdata!=None:
+			print("You have provided too much data, give just x and y data, or a csv or xlsx file!")
+			return
+		if csv!=None:
+			csv_data=pd.read_csv(csv)
+			Xdata=csv_data[x_col]
+			Ydata=csv_data[y_col]
+		if xlsx!=None:
+			xlsx_data=pd.read_excel(xlsx)
+			Xdata=xlsx_data[x_col]
+			Ydata=xlsx_data[y_col]
 		if isinstance(Xdata, pd.Series):
 			print('converting pandas series to list')
 			Xdata=list(Xdata)
