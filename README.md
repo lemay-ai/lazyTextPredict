@@ -12,8 +12,7 @@ from lazytextpredict import basic_classification
 trial=basic_classification.LTP(Xdata=X,Ydata=Y, csv=None, xlsx=None, x_col='X', y_col='Y', models='all') 
 # Xdata is a list of text entries, and Ydata is a list of corresponding labels.
 # csv and xlsx give options to load data from those file formats (you can pass the file or the file's location)
-# x_col and y_col are strings that specify the columns of the 
-# text and label columns in your csv or xlsx file respectively.
+# x_col and y_col are strings that specify the columns of the # text and label columns in your csv or xlsx file respectively.
 # You can choose between 'cnn'-based, 'count-vectorizer'-based, and 'all' models.
 
 trial.run(training_epochs=5) 
