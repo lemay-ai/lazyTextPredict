@@ -4,16 +4,22 @@
 
 Currently the models are hard-coded, i.e. you can only choose between neural network and count-vectorizer models, but watch this space!
 
-You can currently only upload data which has single categories (i.e. the models can be trained to detect differences between happy, jealous or sad text etc., but not both happy and excited). Your data should be submitted as python lists to the fields Xdata and Ydata.
+You can currently only upload data which has single categories (i.e. the models can be trained to detect differences between happy, jealous or sad text etc., but not both happy and excited). Your data should be submitted as python lists or pandas series to the fields Xdata and Ydata. Alternately you can pass csv or xlsx files to the appropriate options (see below).
 
 ```
 from lazytextpredict import basic_classification
 
-trial=basic_classification.LTP() 
-
-trial.run(Xdata, Ydata, models='all') 
+trial=basic_classification.LTP(Xdata=X,Ydata=Y, csv=None, xlsx=None, x_col='X', y_col='Y', models='all') 
 # Xdata is a list of text entries, and Ydata is a list of corresponding labels.
+# csv and xlsx give options to load data from those file formats (you can pass the file or the file's location)
+# x_col and y_col are strings that specify the columns of the 
+# text and label columns in your csv or xlsx file respectively.
 # You can choose between 'cnn'-based, 'count-vectorizer'-based, and 'all' models.
+
+trial.run(training_epochs=5) 
+#This trains the models specified above on the data you loaded. 
+#Here you can specify the number of training epochs. 
+#Fewer training epochs will give poorer performance, but will run quicker to allow debugging.
 
 trial.print_metrics_table()
 # This will return the performance of the models that have been trained:
@@ -61,10 +67,7 @@ This tool is built on top of [PyTorch](https://pytorch.org/) framework and [tran
 
 Unfortunately, this tool requires a fair bit of computing power. If you do not have a GPU that the tool can use, you will struggle to run it.
 
-A good test is to try to install tensorflow-gpu, if you can, there is a chance you could run this tool!
-```
-pip install tensorflow-gpu
-```
+A good test is to try to install the package, if you can, there is a chance you could run it!
 
 A practical alternative is to run this all in google colab pro or similar platforms that give you access to the resources you need (although these might not be free!).
 
