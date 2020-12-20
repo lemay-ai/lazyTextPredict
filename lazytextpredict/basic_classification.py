@@ -1,3 +1,4 @@
+
 import pandas as pd
 import gc
 import transformers
@@ -56,6 +57,12 @@ class LTP:
 		else:
 			print('Models not recognized, the available options are currently "all", "count-vectorizer", and "cnn"')
 			return
+		if isinstance(Xdata, pd.Series):
+			print('converting pandas series to list')
+			Xdata=list(Xdata)
+		if isinstance(Ydata, pd.Series):
+			print('converting pandas series to list')
+			Ydata=list(Ydata)
 
 		if Xdata==Ydata==None or (Xdata==None and Ydata!=None) or (Xdata!=None and Ydata==None):
 			print('Either you have not put in your own data, or you have only put in X or Y data, loading default dataset...')
@@ -71,8 +78,8 @@ class LTP:
 			else:
 				Y,keys=string_labels_to_int(Y)
     #add method to make min label 0
-				if min(Y)>=1:
-				  Y=[y-min(Y) for y in Y]
+			if min(Y)>=1:
+				Y=[y-min(Y) for y in Y]
 				
 		X_train, X_test, Y_train, Y_test = train_test_split(X, Y,
                                                         stratify=Y, 
