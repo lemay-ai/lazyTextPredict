@@ -37,7 +37,7 @@ def int_labels_to_list(Y,keys):
 
 
 class LTP:
-	def __init__ (self, Xdata=None,Ydata=None, models='all'):
+	def __init__ (self, Xdata=None, Ydata=None, csv=None,xlsx=None,x_col='X',y_col='Y',models='all'):
 		if models=='all':
 			self.model_list = [
 				'bert-base-uncased',
@@ -57,6 +57,17 @@ class LTP:
 		else:
 			print('Models not recognized, the available options are currently "all", "count-vectorizer", and "cnn"')
 			return
+    if csv!=None and xlsx!= None and Xdata!=None:
+      print("You have provided too much data, give just x and y data, or a csv or xlsx file!")
+      return
+    if csv!=None:
+      csv_data=pd.read_csv(csv)
+      Xdata=csv_data[x_col]
+      Ydata=csv_data[y_col]
+    if xlsx!=None:
+      xlsx_data=pd.read_excel(xlsx)
+      Xdata=xlsx_data[x_col]
+      Ydata=xlsx_data[y_col]
 		if isinstance(Xdata, pd.Series):
 			print('converting pandas series to list')
 			Xdata=list(Xdata)
@@ -131,13 +142,13 @@ class LTP:
 			print("{:>25} {:15.5} {:15.5} {:15.5} {:15.5} {:15.5}".format(k, v['eval_loss'], v['eval_accuracy'], v['eval_f1'], v['eval_precision'], v['eval_recall']))
 
 
-	def run(self):
+	def run(self, training_epochs=1):
 
 		for model_name in self.model_list:
 
 			training_args = TrainingArguments(
 			output_dir='./results/'+model_name,
-			num_train_epochs=1,
+			num_train_epochs=training_epochs,
 			per_device_train_batch_size=16,
 			per_device_eval_batch_size=64,
 			warmup_steps=500,
