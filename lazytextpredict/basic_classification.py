@@ -141,8 +141,11 @@ class LTP:
 			print("{:>25} {:15.5} {:15.5} {:15.5} {:15.5} {:15.5}".format(k, v['eval_loss'], v['eval_accuracy'], v['eval_f1'], v['eval_precision'], v['eval_recall']))
 
 
-	def run(self, training_epochs=1):
-
+	def run(self, focused=False, focused_model=None, training_epochs=5):
+		if focused==True:
+			self.model_list=[focused_model]
+		else:
+			pass
 		for model_name in self.model_list:
 
 			training_args = TrainingArguments(
@@ -261,12 +264,13 @@ class LTP:
 			gc.collect()
 			torch.cuda.empty_cache()
    
+
    
-	def predict(self,text=None):
+	def predict(self,model_name=None,focused=False,text=None):
 		if text == None:
 			print('you did not enter any text to classify, sorry')
 			return
-		for model_name in self.model_list:
+		if focused==True:
 			if model_name == "linear_SVM" or model_name == "multinomial_naive_bayesian":
 				clf = load('/content/'+model_name+'_model.joblib')
 				y=clf.predict([text])
@@ -288,3 +292,26 @@ class LTP:
 					y=text_classification(text)[0]
 			print(model_name)
 			print(y)
+		else:
+			for model_name in self.model_list:
+				if model_name == "linear_SVM" or model_name == "multinomial_naive_bayesian":
+					clf = load('/content/'+model_name+'_model.joblib')
+					y=clf.predict([text])
+				else:
+					if model_name == "bert-base-uncased":
+						model=BertForSequenceClassification.from_pretrained('/content/bert-base-uncased_model')
+						tokenizer=BertTokenizerFast.from_pretrained('bert-base-uncased')
+						text_classification= transformers.pipeline('sentiment-analysis', model=model, tokenizer=tokenizer)
+						y=text_classification(text)[0]
+					elif model_name == "albert-base-v2":
+						model=transformers.AlbertForSequenceClassification.from_pretrained('/content/albert-base-v2_model')
+						tokenizer=transformers.AlbertTokenizer.from_pretrained('albert-base-v2')
+						text_classification= transformers.pipeline('sentiment-analysis', model=model, tokenizer=tokenizer)
+						y=text_classification(text)[0]
+					elif model_name == "roberta-base":
+						model=transformers.RobertaForSequenceClassification.from_pretrained('/content/roberta-base_model')
+						tokenizer=transformers.RobertaTokenizer.from_pretrained('roberta-base')
+						text_classification= transformers.pipeline('sentiment-analysis', model=model, tokenizer=tokenizer)
+						y=text_classification(text)[0]
+				print(model_name)
+				print(y)
