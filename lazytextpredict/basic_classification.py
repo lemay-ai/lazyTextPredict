@@ -36,7 +36,7 @@ def int_labels_to_list(Y,keys):
 
 
 class LTP:
-	def __init__ (self, Xdata=None, Ydata=None, csv=None,xlsx=None,x_col='X',y_col='Y',models='all'):
+	def __init__ (self, Xdata=None, Ydata=None, csv=None,xlsx=None,x_col='X',y_col='Y',models='all',test_frac=0.05,train_frac=0.05):
 		if models=='all':
 			self.model_list = [
 				'bert-base-uncased',
@@ -93,8 +93,8 @@ class LTP:
 				
 		X_train, X_test, Y_train, Y_test = train_test_split(X, Y,
                                                         stratify=Y, 
-                                                        test_size=0.05,
-                                                        train_size=0.05)
+                                                        test_size=test_frac,
+                                                        train_size=train_frac)
 		self.num_labels=len(keys)
 		#self.train_dataset_raw_CNN = TensorDataset(X_train, int_labels_to_list(Y_train,keys))
 		#self.test_dataset_raw_CNN = TensorDataset(X_test, int_labels_to_list(Y_test,keys))
