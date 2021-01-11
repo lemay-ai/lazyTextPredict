@@ -49,7 +49,7 @@ We have added several example ipynb files to show how the library may be used.
 
 Install the package from the PyPi test server in command line:
 ```
-python3 -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple  lazytextpredict-installs
+pip install lazytextpredict
 ```
 
 ## About
