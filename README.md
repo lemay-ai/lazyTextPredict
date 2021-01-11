@@ -36,6 +36,15 @@ trial.predict(text)
 ```
 This will train and test each of the models show you their performance (loss rate, f1 score, training time, computing resources required etc.) and let you classify your own text.
 
+Once you have determined which model is best for your application you can do a more in-depth training on the model of your choice. This can be done by calling a new instance of the LTP class and running a focused training:
+
+```
+focused_trial=basic_classification.LTP(test_frac=0.05,train_frac=0.45)
+focused_trial.run(focused=True,focused_model='bert-base-uncased',training_epochs=5)
+```
+
+We have added several example ipynb files to show how the library may be used.
+
 ## Installation
 
 Install the package from the PyPi test server in command line:
