@@ -7,7 +7,7 @@ Currently the models are hard-coded, i.e. you can only choose between neural net
 You can currently only upload data which has single categories (i.e. the models can be trained to detect differences between happy, jealous or sad text etc., but not both happy and excited). Your data should be submitted as python lists or pandas series to the fields Xdata and Ydata. Alternately you can pass csv or xlsx files to the appropriate options (see below).
 
 ```
-from lazytextpredict import basic_classification
+from lazy-text-predict import basic_classification
 
 trial=basic_classification.LTP(Xdata=X,Ydata=Y, csv=None, xlsx=None, x_col='X', y_col='Y', models='all') 
 # Xdata is a list of text entries, and Ydata is a list of corresponding labels.
@@ -47,9 +47,9 @@ We have added several example ipynb files to show how the library may be used.
 
 ## Installation
 
-Install the package from the PyPi test server in command line:
+Install the package from PyPi in command line:
 ```
-pip install lazytextpredict
+pip install lazy-text-predict
 ```
 
 ## About
