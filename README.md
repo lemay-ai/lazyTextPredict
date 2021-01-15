@@ -2,7 +2,7 @@
 
 ## Usage
 
-Currently the models are hard-coded, i.e. you can only choose between neural network and count-vectorizer models, but watch this space!
+Currently the models are hard-coded, i.e. you can only choose between transformer and count-vectorizer models, but watch this space!
 
 You can currently only upload data which has single categories (i.e. the models can be trained to detect differences between happy, jealous or sad text etc., but not both happy and excited). Your data should be submitted as python lists or pandas series to the fields Xdata and Ydata. Alternately you can pass csv or xlsx files to the appropriate options (see below).
 
