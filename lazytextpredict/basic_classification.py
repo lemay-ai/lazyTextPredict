@@ -48,13 +48,13 @@ class LTP:
 			self.model_list = [
         'linear_SVM',
         'multinomial_naive_bayesian',]
-		elif models=='cnn':
+		elif models=='transformers':
 			self.model_list = [
         'bert-base-uncased',
         'albert-base-v2',
         'roberta-base',]
 		else:
-			print('Models not recognized, the available options are currently "all", "count-vectorizer", and "cnn"')
+			print('Models not recognized, the available options are currently "all", "count-vectorizer", and "transformers"')
 			return
 		if csv!=None and xlsx!= None and Xdata!=None:
 			print("You have provided too much data, give just x and y data, or a csv or xlsx file!")
