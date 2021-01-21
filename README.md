@@ -2,9 +2,7 @@
 
 ## Usage
 
-Currently the models are hard-coded, i.e. you can only choose between transformer and count-vectorizer models, but watch this space!
-
-You can currently only upload data which has single categories (i.e. the models can be trained to detect differences between happy, jealous or sad text etc., but not both happy and excited). Your data should be submitted as python lists or pandas series to the fields Xdata and Ydata. Alternately you can pass csv or xlsx files to the appropriate options (see below).
+You can currently upload data which has single categories (i.e. the models can be trained to detect differences between happy, jealous or sad text etc., but not both happy and excited). Your data should be submitted as python lists or pandas series to the fields Xdata and Ydata. Alternately you can pass csv or xlsx files to the appropriate options (see below).
 
 ```
 from lazy-text-predict import basic_classification
@@ -35,6 +33,9 @@ trial.predict(text)
 # This will return the class's index based on how the order it appears in your input labels.
 ```
 This will train and test each of the models show you their performance (loss rate, f1 score, training time, computing resources required etc.) and let you classify your own text.
+
+
+The models are currently hard-coded, i.e. you can only choose between transformer and count-vectorizer models, but watch this space!
 
 Once you have determined which model is best for your application you can do a more in-depth training on the model of your choice. This can be done by calling a new instance of the LTP class and running a focused training:
 
