@@ -4,7 +4,7 @@
 
 You can currently upload data which has single categories (i.e. the models can be trained to detect differences between happy, jealous or sad text etc., but not both happy and excited). Your data should be submitted as python lists or pandas series to the fields Xdata and Ydata. Alternately you can pass csv or xlsx files to the appropriate options. 
 
-Click here for an extensive example notebook [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/lemay-ai/lazyTextPredict/blob/master/examples/specific_training_lazytextpredict_pip.ipynb)
+Click here for an extensive example notebook [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/lemay-ai/lazyTextPredict/blob/master/examples/lazy_text_predict_example.ipynb)
 , or see below:
 
 ```
@@ -14,7 +14,7 @@ trial=basic_classification.LTP(Xdata=X,Ydata=Y, csv=None, xlsx=None, x_col='X', 
 # Xdata is a list of text entries, and Ydata is a list of corresponding labels.
 # csv and xlsx give options to load data from those file formats (you can pass the file or the file's location)
 # x_col and y_col are strings that specify the columns of the # text and label columns in your csv or xlsx file respectively.
-# You can choose between 'cnn'-based, 'count-vectorizer'-based, and 'all' models.
+# You can choose between 'transformers'-based, 'count-vectorizer'-based, and 'all' models.
 
 trial.run(training_epochs=5) 
 #This trains the models specified above on the data you loaded. 
