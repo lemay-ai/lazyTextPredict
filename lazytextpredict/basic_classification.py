@@ -36,7 +36,7 @@ def int_labels_to_list(Y,keys):
 
 
 class LTP:
-	def __init__ (self, Xdata=None, Ydata=None, csv=None,xlsx=None,x_col='X',y_col='Y',models='all',test_frac=0.05,train_frac=0.05):
+	def __init__ (self, Xdata=None, Ydata=None, csv=None,xlsx=None,x_col='X',y_col='Y',models='all',test_frac=1,train_frac=1):
 		if models=='all':
 			self.model_list = [
 				'bert-base-uncased',
