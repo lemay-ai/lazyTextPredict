@@ -36,7 +36,7 @@ def int_labels_to_list(Y,keys):
 
 
 class LTP:
-	def __init__ (self, Xdata=None, Ydata=None, csv=None,xlsx=None,x_col='X',y_col='Y',models='all',test_frac=1,train_frac=1):
+	def __init__ (self, Xdata=None, Ydata=None, csv=None,xlsx=None,x_col='X',y_col='Y',models='all',test_frac=0.1,train_frac=0.9):
 		if models=='all':
 			self.model_list = [
 				'bert-base-uncased',
@@ -90,7 +90,19 @@ class LTP:
     #add method to make min label 0
 			if min(Y)>=1:
 				Y=[y-min(Y) for y in Y]
-				
+		if len(Xdata)<20:
+		  print('dataset is really small, using default test/train split (0.25)')
+		  test_frac=None
+		  train_frac=None
+		if len(Xdata)<8:
+		  print('dataset is really too small, using default test/train split (0.5)')
+		  test_frac=0.5
+		  train_frac=0.5
+
+		if len(Xdata)!=len(Ydata):
+		  print('ERROR: X data and Y data lengths are not the same size, they need to be!')
+		  return
+
 		X_train, X_test, Y_train, Y_test = train_test_split(X, Y,
                                                         stratify=Y, 
                                                         test_size=test_frac,
@@ -218,28 +230,30 @@ class LTP:
                      ('clf', classifier),
                      ])
 				gs_clf = GridSearchCV(pipeline, parameters, cv=5, n_jobs=-1)
-				gs_ind=int(len(train_dataset['labels'])/10)	#use a tenth of the training dataset to do gridsearch
-				gs_clf = gs_clf.fit(train_dataset['text'][:gs_ind], train_dataset['labels'][:gs_ind])
-				best_params=gs_clf.best_params_
-				pipeline.set_params(**best_params)
-				pipeline.fit(train_dataset['text'], train_dataset['labels'])
-				
-				prediction=pipeline.predict(test_dataset['text'])
-				precision, recall, f1, _ = precision_recall_fscore_support(test_dataset['labels'], prediction, average=None)
-				full_report=classification_report(test_dataset['labels'], prediction)
-				acc = accuracy_score(test_dataset['labels'], prediction)
-				loss=hamming_loss(test_dataset['labels'], prediction)
-				curr_metrics={
-				'eval_loss': loss,
-            			'eval_accuracy': np.mean(acc),
-            			'eval_f1': np.mean(f1),
-            			'eval_precision': np.mean(precision),
-            			'eval_recall': np.mean(recall),
-            			'eval_full_report': full_report
-        }
-				dump(pipeline, model_name + "_model.joblib")
-				print('best parameters are:')
-				print(best_params)
+				if len(train_dataset['labels'])<25:
+				  print('not enough data to use a count vectorizer, sorry!')
+				else:
+				  gs_ind=int(len(train_dataset['labels'])/10)	#use a tenth of the training dataset to do gridsearch
+				  gs_clf = gs_clf.fit(train_dataset['text'][:gs_ind], train_dataset['labels'][:gs_ind])
+				  best_params=gs_clf.best_params_
+				  pipeline.set_params(**best_params)
+				  pipeline.fit(train_dataset['text'], train_dataset['labels'])
+				  prediction=pipeline.predict(test_dataset['text'])
+				  precision, recall, f1, _ = precision_recall_fscore_support(test_dataset['labels'], prediction, average=None)
+				  full_report=classification_report(test_dataset['labels'], prediction)
+				  acc = accuracy_score(test_dataset['labels'], prediction)
+				  loss=hamming_loss(test_dataset['labels'], prediction)
+				  curr_metrics={
+          'eval_loss': loss,
+                    'eval_accuracy': np.mean(acc),
+                    'eval_f1': np.mean(f1),
+                    'eval_precision': np.mean(precision),
+                    'eval_recall': np.mean(recall),
+                    'eval_full_report': full_report
+          }
+				  dump(pipeline, model_name + "_model.joblib")
+				  print('best parameters are:')
+				  print(best_params)
 
 			else:
 				trainer = Trainer(model=model,
