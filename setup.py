@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="lazy-text-predict",
-    version="0.0.4",
+    version="0.0.8",
     author="Edward Booker",
     author_email="epb378@gmail.com",
     description="Text classification automl",
@@ -16,7 +16,7 @@ setuptools.setup(
     install_requires =[
     "transformers==3.5.1",
     "nlp==0.4.0",
-    "torch==1.7.0+cu101",
+    "torch==1.7.0",
     "numpy==1.18.5",
     "scikit_learn==0.23.2",
     "sentencepiece",
