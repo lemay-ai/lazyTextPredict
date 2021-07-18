@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="lazy-text-predict",
-    version="0.0.8",
+    version="0.0.11",
     author="Edward Booker",
     author_email="epb378@gmail.com",
     description="Text classification automl",
@@ -14,11 +14,11 @@ setuptools.setup(
     url="https://github.com/lemay-ai/lazyTextPredict",
     packages=setuptools.find_packages(),
     install_requires =[
-    "transformers==3.5.1",
-    "nlp==0.4.0",
-    "torch==1.7.0",
-    "numpy==1.18.5",
-    "scikit_learn==0.23.2",
+    "transformers",
+    "nlp",
+    "torch",
+    "numpy",
+    "scikit_learn",
     "sentencepiece",
     ],
     classifiers=[
