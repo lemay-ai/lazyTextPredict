@@ -78,7 +78,9 @@ class LTP:
 			print('Either you have not put in your own data, or you have only put in X or Y data, loading default dataset...')
 			self.train_dataset_raw, self.test_dataset_raw = load_dataset('imdb', split=['train', 'test'])
 			X=self.train_dataset_raw['text']+self.test_dataset_raw['text']
+			Xdata = X
 			Y=self.train_dataset_raw['label']+self.test_dataset_raw['label']
+			Ydata = Y
 			keys=set(Y)
 		else:
 			X=Xdata
